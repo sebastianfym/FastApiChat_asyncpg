@@ -10,4 +10,8 @@ class UserSchema(BaseModel):
 
 
 class UserSchemaAdd(BaseModel):
-    name: str
+    username: str
+    password: str
+
+
+UserSchemaAuth = UserSchemaAdd

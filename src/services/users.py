@@ -1,7 +1,10 @@
 from abc import ABC, abstractmethod
 
+import aiohttp
 from sqlalchemy import insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.config.config import BASE_URL
 
 
 class AbstractRepository(ABC):
@@ -42,3 +45,16 @@ class SQLAlchemyRepository(AbstractRepository):
         res = await self.session.execute(stmt)
         result = res.scalar_one().to_read_model()
         return result
+
+
+async def get_user_data(token):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(
+                f"{BASE_URL}users/users/me/", headers={
+                    'Authorization': f'Bearer {token}',
+                    'Content-Type': 'application/json'
+                },
+                json={}
+        ) as resp:
+            response = await resp.json()
+    return response

@@ -1,5 +1,5 @@
 import os
-
+from starlette.templating import Jinja2Templates
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -10,8 +10,9 @@ DB_NAME = os.environ.get("DB_NAME")
 DB_USER = os.environ.get("DB_USER")
 DB_PASS = os.environ.get("DB_PASS")
 
-DB_HOST_TEST = os.environ.get("DB_HOST_TEST")
-DB_PORT_TEST = os.environ.get("DB_PORT_TEST")
-DB_NAME_TEST = os.environ.get("DB_NAME_TEST")
-DB_USER_TEST = os.environ.get("DB_USER_TEST")
-DB_PASS_TEST = os.environ.get("DB_PASS_TEST")
+SECRET_KEY = os.environ.get("SECRET_KEY")
+
+BASE_URL = "localhost:8000/"
+
+templates = Jinja2Templates(directory="src/templates")
+

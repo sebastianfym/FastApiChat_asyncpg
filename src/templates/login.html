@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form id="loginForm">
+    <input type="text" id="username" name="username" placeholder="Username"><br>
+    <input type="password" id="password" name="password" placeholder="Password"><br>
+    <input type="button" onclick="login()" value="Login">
+</form>
+
+<script>
+    async function login() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const data = { "username": username, "password": password };
+
+        try {
+            const response = await fetch('/users/auth', {  // Обратите внимание на URL, он должен соответствовать вашему маршруту для аутентификации
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                const token = responseData.access_token;
+
+                // Сохранение токена в локальном хранилище
+                localStorage.setItem('token', token);
+
+                // Перенаправление на /me с добавлением токена в заголовке Authorization
+                const redirectResponse = await fetch('/users/me', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (redirectResponse.ok) {
+                    // Обработка успешного запроса /me, например, получение данных пользователя
+                    const userData = await redirectResponse.json();
+                    console.log('User Data:', userData);
+                } else {
+                    // Обработка ошибок запроса /me
+                    alert('Failed to fetch user data');
+                }
+            } else {
+                // Обработка ошибок здесь, например, отображение сообщения пользователю
+                alert('Invalid username or password. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            // Дополнительная обработка ошибок, если нужно
+        }
+    }
+</script>
+
+{% endblock %}
