@@ -30,7 +30,6 @@ for router in routers:
 @app.on_event("startup")
 async def startup_event():
     for stmt in [stmt_user_table_create, stmt_message_table_create]:
-        print(111111, stmt)
         await create_table(stmt)
 
 
