@@ -27,8 +27,12 @@ app.add_middleware(AuthenticationMiddleware, backend=JWTBearer())
 for router in routers:
     app.include_router(router)
 
+@app.on_event("startup")
+async def startup_event():
+    for stmt in [stmt_user_table_create, stmt_message_table_create]:
+        print(111111, stmt)
+        await create_table(stmt)
+
 
 if __name__ == "__main__":
-    for stmt in [stmt_message_table_create, stmt_user_table_create]:
-        asyncio.run(create_table(stmt))
     uvicorn.run(app="src.main:app", reload=True)

@@ -1,3 +1,5 @@
+import asyncio
+
 import asyncpg
 from psycopg2 import Error
 from sqlalchemy.orm import declarative_base
